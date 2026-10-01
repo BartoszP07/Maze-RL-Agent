@@ -31,7 +31,7 @@ class CreateMaze():
             y = random.randint(1, self.height - 1)
 
             if (x != y):
-                if (self.grid[y][x] == 0 or (x, y) in avoid_coords):
+                if (self.grid[y][x] == 0 and [x, y] not in avoid_coords):
                     return (x, y)
         
     # Subroutine to create the maze
@@ -44,7 +44,7 @@ class CreateMaze():
         # Start pos
         self.start_x, self.start_y = self.FindEmptyPoint()
         # End pos
-        end_x, end_y = self.FindEmptyPoint(avoid_coords=(self.start_x, self.start_y))
+        end_x, end_y = self.FindEmptyPoint(avoid_coords=[[self.start_x, self.start_y]])
         # Add this point to the grid
         self.grid[end_y][end_x] = 3
         

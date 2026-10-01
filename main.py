@@ -29,10 +29,6 @@ class Maze:
         new_screen_h = self.maze.height * self.maze.tile_height
         self.screen = pygame.display.set_mode((new_screen_w, new_screen_h))
         
-        
-        
-        
-        
         # Create the maze
         self.maze.CreateMaze()
         
@@ -54,6 +50,15 @@ class Maze:
                     self.maze.CreateMaze()
                     self.player.x = self.maze.start_x
                     self.player.y = self.maze.start_y
+                    
+                if event.key == pygame.K_w:
+                    self.player.Move("up", self.maze.grid)
+                if event.key == pygame.K_s:
+                    self.player.Move("down", self.maze.grid)
+                if event.key == pygame.K_a:
+                    self.player.Move("left", self.maze.grid)
+                if event.key == pygame.K_d:
+                    self.player.Move("right", self.maze.grid)
     
     # Subroutine to handle updating the game
     def Update(self):
