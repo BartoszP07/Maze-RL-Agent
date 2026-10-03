@@ -38,7 +38,10 @@ class Maze:
         # Create the agent object
         self.agent = RLAgent()
         
-        self.generation = 0
+        # Add a tracker for the agent
+        self.generation = 1
+        self.max_steps = 500
+        self.steps_taken = 0
         
     # Subroutine to run the AI simulation
     def RunSimulation(self):
@@ -64,9 +67,8 @@ class Maze:
             print(f"New Epsilon: {self.agent.epsilon}")
             self.generation += 1
             
-            self.player.Move(next_x, next_y)
-        
-            # The maze will automatically restart (done in the update func)
+            # Move the player to the start for the next generation
+            self.player.Move(self.maze.start_x, self.maze.start_y)
         
         # Check if hit a wall
         elif self.maze.grid[next_y][next_x] == 1:
@@ -83,6 +85,21 @@ class Maze:
 
         # Get the ai to learn from this
         self.agent.Learn(current_state, action, reward, next_state)
+        
+        # Timeout this generation if taking too long
+        if self.steps_taken >= self.max_steps:
+            # Debug
+            print(f"Generation: {self.generation} timeout!")
+            
+            # Restart the maze
+            self.player.Move(self.maze.start_x, self.maze.start_y)
+            
+            # Update the epsilon for the agent to lower randomness
+            self.agent.epsilon = max(self.agent.epsilon_min, self.agent.epsilon * self.agent.epsilon_decay)    
+            
+            # Increment the generation and reset steps
+            self.generation += 1
+            self.steps_taken = 0
         
     # Subroutine to regenerate the maze and reposition the player
     def RestartMaze(self):
@@ -116,9 +133,9 @@ class Maze:
     # Subroutine to handle updating the game
     def Update(self):
         # Check if the current player position is the same as the end position
-        if (self.player.x == self.maze.end_x) and (self.player.y == self.maze.end_y):
-            # Get a new maze
-            self.RestartMaze()
+        # if (self.player.x == self.maze.end_x) and (self.player.y == self.maze.end_y):
+        #     # Get a new maze
+        #     self.RestartMaze()
             
         # Run the simulation
         self.RunSimulation()

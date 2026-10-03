@@ -36,7 +36,7 @@ class RLAgent():
         else:
             # Use the highest of the q values
             q_values = self.GetQValues(state)
-            return max(self.q_table, key=q_values.get)
+            return max(q_values, key=q_values.get)
         
     # Get the agent to learn
     def Learn(self, state, action, reward, next_state):
