@@ -100,6 +100,9 @@ class Maze:
             # Update the epsilon for the agent to lower randomness
             self.agent.epsilon = max(self.agent.epsilon_min, self.agent.epsilon * self.agent.epsilon_decay)    
             
+            # Debug
+            print(f"New epsilon: {self.agent.epsilon}")
+            
             # Increment the generation and reset steps
             self.generation += 1
             self.steps_taken = 0
