@@ -14,12 +14,12 @@ class RLAgent():
         
         # Epsilon variables for exploration and exploitation
         self.epsilon = 1 # -> used to determine randomness 0 - 1 (min - max)
-        self.epsilon_decay = 0.995 # -> used to lower the randomness for each iteration
+        self.epsilon_decay = 0.90 # -> used to lower the randomness for each iteration
         self.epsilon_min = 0.01 # -> make the randomness for movement a minimum, not 0.
         
         # Parameters for the actual learning
-        self.learning_rate = 0.1 # -> How aggressively the agent overrides new data with old data
-        self.discound_factor = 0.9 # -> How much it values finding the exit vs taking an immediate safe step
+        self.learning_rate = 1.0 # -> How aggressively the agent overrides new data with old data
+        self.discound_factor = 0.99 # -> How much it values finding the exit vs taking an immediate safe step
         
     # Subroutine to get the q values
     def GetQValues(self, state):
