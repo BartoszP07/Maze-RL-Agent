@@ -53,6 +53,9 @@ class Maze:
         # Get the next position from the player class
         next_x, next_y = self.player.GetNextPosition(action)
         
+        # Update the steps taken by the ai
+        self.steps_taken += 1
+        
         # Update the ai with reward point and get it to learn
         # Check if the ai has found the end
         if (next_x == self.maze.end_x) and (next_y == self.maze.end_y):
