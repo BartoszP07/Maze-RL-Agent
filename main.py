@@ -35,6 +35,61 @@ class Maze:
         # Create the player
         self.player = Player(self.maze.start_x, self.maze.start_y, tile_size)
         
+        # Create the agent object
+        self.agent = RLAgent()
+        
+        self.generation = 0
+        
+    # Subroutine to run the AI simulation
+    def RunSimulation(self):
+        
+        # Get the current position of the player
+        current_state = (self.player.x, self.player.y)
+        # Get the action from the agent
+        action = self.agent.ChooseAction(current_state)
+        # Get the next position from the player class
+        next_x, next_y = self.player.GetNextPosition(action)
+        
+        # Update the ai with reward point and get it to learn
+        # Check if the ai has found the end
+        if (next_x == self.maze.end_x) and (next_y == self.maze.end_y):
+            # Reward the ai massively
+            reward = 1000
+            # Get the next position
+            next_state = (next_x, next_y)
+            # Update the agents randomness
+            self.agent.epsilon = max(self.agent.epsilon_min, self.agent.epsilon * self.agent.epsilon_decay)
+            # Debug info
+            print(f"Generation {self.generation} complete")
+            print(f"New Epsilon: {self.agent.epsilon}")
+            self.generation += 1
+            
+            self.player.Move(next_x, next_y)
+        
+            # The maze will automatically restart (done in the update func)
+        
+        # Check if hit a wall
+        elif self.maze.grid[next_y][next_x] == 1:
+            # Punish the ai
+            reward = -100
+            # Dont move the player
+            next_state = current_state 
+        
+        # If just and empty space
+        else:
+            reward = -1
+            next_state = (next_x, next_y)
+            self.player.Move(next_x, next_y)
+
+        # Get the ai to learn from this
+        self.agent.Learn(current_state, action, reward, next_state)
+        
+    # Subroutine to regenerate the maze and reposition the player
+    def RestartMaze(self):
+        self.maze.CreateMaze()
+        self.player.x = self.maze.start_x
+        self.player.y = self.maze.start_y
+        
     # Subroutine to stop close the game
     def QuitGame(self):
         pygame.quit()
@@ -47,9 +102,7 @@ class Maze:
                 self.QuitGame()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    self.maze.CreateMaze()
-                    self.player.x = self.maze.start_x
-                    self.player.y = self.maze.start_y
+                    self.RestartMaze()
                     
                 if event.key == pygame.K_w:
                     self.player.Move("up", self.maze.grid)
@@ -62,7 +115,13 @@ class Maze:
     
     # Subroutine to handle updating the game
     def Update(self):
-        pass
+        # Check if the current player position is the same as the end position
+        if (self.player.x == self.maze.end_x) and (self.player.y == self.maze.end_y):
+            # Get a new maze
+            self.RestartMaze()
+            
+        # Run the simulation
+        self.RunSimulation()
     
     # Subroutine to render the game assets
     def Draw(self):

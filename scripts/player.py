@@ -16,9 +16,8 @@ class Player:
         self.rect = pygame.Rect(0, 0, self.size, self.size)
         
         
-    # Subroutine to move the player around the maze
-    def Move(self, direction, grid):
-        
+    # Subroutine to get the next position from the player
+    def GetNextPosition(self, direction):
         new_x = self.x
         new_y = self.y
         
@@ -32,10 +31,15 @@ class Player:
         elif direction == "right":
             new_x += 1
             
-        # Check if the move is valid -- so empty space (0) or target space (3)
-        if (grid[new_y][new_x] == 0 or grid[new_y][new_x] == 3):
-            self.x = new_x
-            self.y = new_y
+        # Return the new coordinates
+        return new_x, new_y
+        
+    # Subroutine to move the player around the maze
+    def Move(self, next_x, next_y):        
+        # # Check if the move is valid -- so empty space (0) or target space (3)
+        # if (grid[new_y][new_x] == 0 or grid[new_y][new_x] == 3):
+        self.x = next_x
+        self.y = next_y
         
     # Draw the player
     def Draw(self, screen):

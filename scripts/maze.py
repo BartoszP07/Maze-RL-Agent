@@ -20,9 +20,11 @@ class CreateMaze():
         # Fill the grid array with number 1's
         self.grid = [[1 for _ in range(self.width)] for _ in range(self.height)]
         
-        # Keep the start coordinates
+        # Keep the start and end coordinates
         self.start_x = 0
         self.start_y = 0
+        self.end_x = 0
+        self.end_y = 0
         
     # Function to return a random empty point on the maze grid
     def FindEmptyPoint(self, avoid_coords=[]):
@@ -44,9 +46,9 @@ class CreateMaze():
         # Start pos
         self.start_x, self.start_y = self.FindEmptyPoint()
         # End pos
-        end_x, end_y = self.FindEmptyPoint(avoid_coords=[[self.start_x, self.start_y]])
+        self.end_x, self.end_y = self.FindEmptyPoint(avoid_coords=[[self.start_x, self.start_y]])
         # Add this point to the grid
-        self.grid[end_y][end_x] = 3
+        self.grid[self.end_y][self.end_x] = 3
         
     # Subroutine to generate the maze
     def GenerateMaze(self, start_x, start_y):
